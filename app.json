@@ -31,6 +31,9 @@
       "backgroundColor": "#0D0D10"
     },
     "scheme": "pdtapp",
-    "plugins": []
+    "plugins": [],
+    "experiments": {
+      "tsconfigPaths": true
+    }
   }
 }
