@@ -78,11 +78,14 @@ export default function HealthCard({
 const styles = StyleSheet.create({
     card: {
         flex: 1,
-        backgroundColor: colors.card,
-        borderRadius: 12,
-        padding: 14,
-        borderWidth: 0.5,
-        borderColor: colors.border,
+        backgroundColor: '#FFFFFF',
+        borderRadius: 16,
+        padding: 16,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 6 },
+        shadowOpacity: 0.06,
+        shadowRadius: 12,
+        elevation: 4,
         overflow: 'hidden',
     },
     cardPressed: {
@@ -139,11 +142,9 @@ const styles = StyleSheet.create({
     },
     indicatorBar: {
         position: 'absolute',
+        top: 0,
         bottom: 0,
         left: 0,
-        right: 0,
-        height: 3,
-        borderBottomLeftRadius: 12,
-        borderBottomRightRadius: 12,
+        width: 4,
     },
 });

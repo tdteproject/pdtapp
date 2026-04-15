@@ -11,7 +11,11 @@
       "resizeMode": "contain",
       "backgroundColor": "#111111"
     },
-    "platforms": ["ios", "android", "web"],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -31,7 +35,9 @@
       "backgroundColor": "#0D0D10"
     },
     "scheme": "pdtapp",
-    "plugins": [],
+    "plugins": [
+      "expo-font"
+    ],
     "experiments": {
       "tsconfigPaths": true
     }

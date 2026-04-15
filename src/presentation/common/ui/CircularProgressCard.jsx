@@ -56,7 +56,7 @@ export default function CircularProgressCard({
                                         cx={center}
                                         cy={center}
                                         r={radius}
-                                        stroke={colors.surface}
+                                        stroke="#E2E8F0"
                                         strokeWidth={ringWidth}
                                         fill="none"
                                     />
@@ -134,9 +134,19 @@ const styles = StyleSheet.create({
     },
     centerContent: {
         alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#FFFFFF',
+        width: 90,
+        height: 90,
+        borderRadius: 45,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 6 },
+        shadowOpacity: 0.08,
+        shadowRadius: 12,
+        elevation: 6,
     },
     scoreValue: {
-        fontSize: 36,
+        fontSize: 32,
         fontWeight: fontWeight.extrabold,
         fontFamily: fontFamily.bold,
         color: colors.text.primary,

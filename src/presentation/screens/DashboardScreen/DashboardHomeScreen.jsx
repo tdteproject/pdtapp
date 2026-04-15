@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, ScrollView, StyleSheet, Text, RefreshControl, Animated, Easing, Pressable } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import { useHealthStore } from '@/presentation/state/useHealthStore';
 import SafeAreaWrapper from '@/presentation/common/layout/SafeAreaWrapper';
 import DashboardHeader from '@/presentation/common/ui/DashboardHeader';
@@ -8,7 +9,7 @@ import HealthCard from '@/presentation/common/ui/HealthCard';
 import CircularProgressCard from '@/presentation/common/ui/CircularProgressCard';
 import { colors } from '@/presentation/themes/colors';
 import { fontFamily, fontSize, fontWeight, letterSpacing } from '@/presentation/themes/typography';
-import AnimatedBackground from '@/presentation/common/ui/AnimatedBackground';
+import { LinearGradient } from 'expo-linear-gradient';
 
 // Shimmer placeholder
 const ShimmerBar = ({ width = '100%', height = 16, style }) => {
@@ -40,6 +41,7 @@ const ShimmerBar = ({ width = '100%', height = 16, style }) => {
 };
 
 const DashboardHomeScreen = () => {
+    const navigation = useNavigation();
     const { metrics, goals, workoutMinutes, refreshMetrics } = useHealthStore();
     const [refreshing, setRefreshing] = useState(false);
     const [showSkeleton, setShowSkeleton] = useState(true);
@@ -118,26 +120,30 @@ const DashboardHomeScreen = () => {
     };
 
     const goalItems = [
-        { label: 'Steps', value: metrics.steps.toLocaleString(), progress: stepsProgress, color: colors.health.steps, icon: 'directions-walk' },
-        { label: 'Calories', value: metrics.caloriesBurned.toString(), progress: caloriesProgress, color: colors.health.calories, icon: 'local-fire-department' },
-        { label: 'Water', value: `${(metrics.hydration / 1000).toFixed(1)}L`, progress: hydrationProgress, color: colors.health.hydration, icon: 'water-drop' },
+        { label: 'Steps', value: metrics.steps.toLocaleString(), progress: stepsProgress, color: colors.health.steps, icon: 'directions-walk', route: 'StepsDetail' },
+        { label: 'Calories', value: metrics.caloriesBurned.toString(), progress: caloriesProgress, color: colors.health.calories, icon: 'local-fire-department', route: 'CaloriesDetail' },
+        { label: 'Water', value: `${(metrics.hydration / 1000).toFixed(1)}L`, progress: hydrationProgress, color: colors.health.hydration, icon: 'water-drop', route: 'WaterDetail' },
     ];
 
     return (
     <SafeAreaWrapper>
-      <AnimatedBackground type="rich"/>
       <ScrollView
-        style={styles.container}
+        style={[styles.container, { backgroundColor: '#FFFFFF' }]}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary.main}/>}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.content}
         onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: false })}
         scrollEventThrottle={16}
       >
-        <DashboardHeader scrollY={scrollY} />
+        <LinearGradient
+            colors={['#e0f2fe', '#ccfbf1', '#FFFFFF']}
+            locations={[0, 0.7, 1]}
+            style={styles.heroGradient}
+        >
+            <DashboardHeader scrollY={scrollY} />
 
-        {/* Activity Ring */}
-        <Animated.View style={[styles.section, cardStyle]}>
+            {/* Activity Ring */}
+            <Animated.View style={[styles.section, cardStyle]}>
           <View style={styles.ringCard}>
             {showSkeleton ? (
                 <View style={{ padding: 20, gap: 12 }}>
@@ -159,13 +165,18 @@ const DashboardHomeScreen = () => {
             )}
           </View>
         </Animated.View>
+        </LinearGradient>
 
         {/* Today's Goals */}
         <Animated.View style={[styles.section, cardStyle]}>
           <Text style={styles.sectionTitle}>Today's Goals</Text>
           <View style={styles.goalsRow}>
             {goalItems.map((item, idx) => (
-              <Pressable key={item.label} style={({ pressed }) => [styles.goalItem, pressed && { transform: [{ scale: 0.97 }] }]}>
+              <Pressable 
+                key={item.label} 
+                style={({ pressed }) => [styles.goalItem, pressed && { transform: [{ scale: 0.97 }] }]}
+                onPress={() => navigation.navigate(item.route)}
+              >
                 <View style={[styles.goalIconBg, { backgroundColor: `${item.color}18` }]}>
                   <MaterialIcons name={item.icon} size={20} color={item.color}/>
                 </View>
@@ -263,9 +274,16 @@ const DashboardHomeScreen = () => {
 
       {/* AI Insight FAB */}
       <Animated.View style={[styles.fabContainer, { transform: [{ translateY: fabAnim }] }]}>
-        <Pressable style={({ pressed }) => [styles.fab, pressed && { transform: [{ scale: 0.95 }] }]}>
-          <MaterialIcons name="auto-awesome" size={18} color="#FFFFFF" />
-          <Text style={styles.fabText}>AI Insight</Text>
+        <Pressable style={({ pressed }) => [pressed && { transform: [{ scale: 0.95 }] }]}>
+          <LinearGradient
+            colors={['#38bdf8', '#34d399']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.fab}
+          >
+            <MaterialIcons name="auto-awesome" size={18} color="#FFFFFF" />
+            <Text style={styles.fabText}>AI Insight</Text>
+          </LinearGradient>
         </Pressable>
       </Animated.View>
     </SafeAreaWrapper>
@@ -274,9 +292,13 @@ const DashboardHomeScreen = () => {
 export default DashboardHomeScreen;
 
 const styles = StyleSheet.create({
-    container: { flex: 1 },
-    content: { paddingBottom: 24, paddingHorizontal: 16 },
-    section: { marginBottom: 16 },
+    container: { flex: 1, backgroundColor: '#FFFFFF' },
+    content: { paddingBottom: 24 },
+    heroGradient: {
+        paddingHorizontal: 16,
+        paddingBottom: 24,
+    },
+    section: { marginBottom: 16, paddingHorizontal: 16 },
     sectionTitle: {
         fontFamily: fontFamily.bold,
         fontSize: fontSize.md,
@@ -286,22 +308,19 @@ const styles = StyleSheet.create({
         paddingHorizontal: 4,
     },
     ringCard: {
-        backgroundColor: colors.card,
-        borderRadius: 16,
-        borderWidth: 0.5,
-        borderColor: colors.border,
+        backgroundColor: 'transparent', // The gradient handles background
         paddingVertical: 16,
     },
     goalsRow: { flexDirection: 'row', gap: 10 },
     goalItem: {
         flex: 1,
-        backgroundColor: colors.card,
-        borderRadius: 12,
-        padding: 12,
+        backgroundColor: 'rgba(224, 242, 254, 0.4)', // frosted light blue
+        borderRadius: 16,
+        padding: 14,
         alignItems: 'center',
-        gap: 4,
-        borderWidth: 0.5,
-        borderColor: colors.border,
+        gap: 6,
+        borderWidth: 1,
+        borderColor: 'rgba(255, 255, 255, 0.6)',
     },
     goalIconBg: {
         width: 36,
@@ -410,12 +429,11 @@ const styles = StyleSheet.create({
         gap: 6,
         height: 48,
         paddingHorizontal: 18,
-        backgroundColor: colors.primary.main,
         borderRadius: 99,
-        shadowColor: colors.primary.main,
+        shadowColor: '#34d399',
         shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 8,
+        shadowOpacity: 0.4,
+        shadowRadius: 10,
         elevation: 6,
     },
     fabText: {

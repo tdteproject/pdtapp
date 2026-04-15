@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, TextInput, ScrollView, StyleSheet, Pressable, Animated, Alert, ActivityIndicator } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
+import FirebaseRecaptcha from '@/presentation/common/ui/FirebaseRecaptcha';
 import { useNavigation } from '@react-navigation/native';
 import { firebaseConfig } from '@/data/firebase/config';
 import { useAuthStore } from '@/presentation/state/useAuthStore';
@@ -91,7 +91,7 @@ const PhoneAuth = () => {
     return (
     <SafeAreaWrapper>
       <AuthBackgroundHUD />
-      <FirebaseRecaptchaVerifierModal ref={recaptchaVerifier} firebaseConfig={firebaseConfig} attemptInvisibleVerification={true}/>
+      <FirebaseRecaptcha ref={recaptchaVerifier} firebaseConfig={firebaseConfig} />
 
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
         <Animated.View style={[{ flex: 1, justifyContent: 'center' }, { opacity: fadeAnim }]}>

@@ -7,15 +7,15 @@ import { useAuthStore } from '@/presentation/state/useAuthStore';
 import SafeAreaWrapper from '@/presentation/common/layout/SafeAreaWrapper';
 import { colors } from '@/presentation/themes/colors';
 import { fontFamily, fontSize, fontWeight, letterSpacing } from '@/presentation/themes/typography';
-import AnimatedBackground from '@/presentation/common/ui/AnimatedBackground';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const SETTINGS = [
-    { icon: 'notifications-none', label: 'Notifications', value: 'On', valueColor: colors.notification.on, iconColor: colors.primary.main, group: 'preferences' },
-    { icon: 'straighten', label: 'Units', value: 'Metric (kg, cm)', iconColor: colors.health.workout, group: 'preferences' },
-    { icon: 'language', label: 'Language', value: 'English', iconColor: colors.health.bloodOxygen, group: 'preferences' },
-    { icon: 'privacy-tip', label: 'Privacy Policy', value: null, iconColor: colors.health.sleep, group: 'legal' },
-    { icon: 'description', label: 'Terms of Service', value: null, iconColor: colors.health.hrv, group: 'legal' },
-    { icon: 'info-outline', label: 'App Version', value: '1.0.0', noChevron: true, iconColor: colors.text.muted, group: 'legal' },
+    { icon: 'notifications-none', label: 'Notifications', value: 'On', valueColor: colors.notification.on, iconColor: '#0d9488', group: 'preferences' },
+    { icon: 'straighten', label: 'Units', value: 'Metric (kg, cm)', iconColor: '#0d9488', group: 'preferences' },
+    { icon: 'language', label: 'Language', value: 'English', iconColor: '#0d9488', group: 'preferences' },
+    { icon: 'privacy-tip', label: 'Privacy Policy', value: null, iconColor: '#0d9488', group: 'legal' },
+    { icon: 'description', label: 'Terms of Service', value: null, iconColor: '#0d9488', group: 'legal' },
+    { icon: 'info-outline', label: 'App Version', value: '1.0.0', noChevron: true, iconColor: '#0d9488', group: 'legal' },
 ];
 
 const getBmiStatus = (bmi) => {
@@ -51,15 +51,19 @@ export default function MeScreen() {
 
     return (
     <SafeAreaWrapper>
-      <AnimatedBackground type="minimal"/>
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false} style={{ backgroundColor: '#FFFFFF' }}>
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Profile</Text>
         </View>
 
         {/* Profile Card */}
-        <View style={styles.profileCard}>
+        <LinearGradient
+            colors={['#e0f2fe', '#ccfbf1']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.profileCard}
+        >
           <View style={styles.avatarCircle}>
             <Text style={styles.avatarText}>{firstName.charAt(0).toUpperCase()}</Text>
           </View>
@@ -78,7 +82,7 @@ export default function MeScreen() {
           >
             <MaterialIcons name="edit" size={16} color={colors.primary.main}/>
           </Pressable>
-        </View>
+        </LinearGradient>
 
         {/* Stats Row */}
         {user?.weight && user?.height && (
@@ -94,8 +98,8 @@ export default function MeScreen() {
                 {stat.unit ? <Text style={styles.statUnit}>{stat.unit}</Text> : null}
                 <Text style={styles.statLabel}>{stat.label}</Text>
                 {stat.status && (
-                  <View style={[styles.bmiPill, { backgroundColor: `${stat.status.color}18` }]}>
-                    <Text style={[styles.bmiPillText, { color: stat.status.color }]}>{stat.status.label}</Text>
+                  <View style={[styles.bmiPill, { backgroundColor: stat.status.color }]}>
+                    <Text style={[styles.bmiPillText, { color: '#FFFFFF' }]}>{stat.status.label}</Text>
                   </View>
                 )}
               </View>
@@ -168,48 +172,51 @@ const styles = StyleSheet.create({
         color: colors.text.primary,
         letterSpacing: letterSpacing.tight,
     },
-    // Profile Card
     profileCard: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 16,
-        backgroundColor: colors.card,
-        borderRadius: 16,
-        padding: 16,
-        borderWidth: 0.5,
-        borderColor: colors.border,
+        marginBottom: 20,
+        borderRadius: 20,
+        padding: 20,
         gap: 12,
+        shadowColor: '#34d399',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 10,
+        elevation: 6,
     },
     avatarCircle: {
-        width: 56,
-        height: 56,
-        borderRadius: 28,
-        backgroundColor: colors.primary.main,
+        width: 64,
+        height: 64,
+        borderRadius: 32,
+        backgroundColor: '#0369a1', // Deeper blue
         justifyContent: 'center',
         alignItems: 'center',
+        borderWidth: 3,
+        borderColor: '#FFFFFF',
     },
     avatarText: {
         fontFamily: fontFamily.bold,
-        fontSize: fontSize.xl,
-        color: '#fff',
+        fontSize: fontSize['2xl'],
+        color: '#FFFFFF',
     },
     profileInfo: { flex: 1 },
     profileName: {
         fontFamily: fontFamily.bold,
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: fontWeight.medium,
-        color: colors.text.primary,
+        color: '#0f172a',
     },
     profilePhone: {
-        fontFamily: fontFamily.regular,
+        fontFamily: fontFamily.medium,
         fontSize: fontSize.sm,
-        color: colors.text.muted,
+        color: '#334155',
         marginTop: 2,
     },
     profileMeta: {
-        fontFamily: fontFamily.regular,
+        fontFamily: fontFamily.medium,
         fontSize: fontSize.sm,
-        color: colors.text.muted,
+        color: '#475569',
         marginTop: 2,
     },
     editBtn: {
@@ -228,12 +235,15 @@ const styles = StyleSheet.create({
     },
     statCard: {
         flex: 1,
-        backgroundColor: colors.card,
-        borderRadius: 12,
-        padding: 14,
+        backgroundColor: '#FFFFFF',
+        borderRadius: 16,
+        padding: 16,
         alignItems: 'center',
-        borderWidth: 0.5,
-        borderColor: colors.border,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.05,
+        shadowRadius: 8,
+        elevation: 4,
     },
     statValue: {
         fontFamily: fontFamily.bold,
@@ -275,11 +285,14 @@ const styles = StyleSheet.create({
         marginTop: 4,
     },
     settingsCard: {
-        backgroundColor: colors.card,
-        borderRadius: 12,
-        borderWidth: 0.5,
-        borderColor: colors.border,
+        backgroundColor: '#FFFFFF',
+        borderRadius: 16,
         overflow: 'hidden',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.03,
+        shadowRadius: 4,
+        elevation: 2,
     },
     settingRow: {
         flexDirection: 'row',
@@ -326,14 +339,14 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         gap: 8,
         height: 56,
-        backgroundColor: colors.logout.bg,
+        backgroundColor: '#FFFFFF',
         borderRadius: 16,
-        borderWidth: 0.5,
-        borderColor: colors.logout.border,
+        borderWidth: 1.5,
+        borderColor: colors.error,
     },
     logoutText: {
         fontFamily: fontFamily.bold,
         fontSize: fontSize.base,
-        color: colors.logout.text,
+        color: colors.error,
     },
 });

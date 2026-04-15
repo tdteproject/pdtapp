@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, ScrollView, StyleSheet, Pressable, Animated, ActivityIndicator } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
+import FirebaseRecaptcha from '@/presentation/common/ui/FirebaseRecaptcha';
 import { MaterialIcons } from '@expo/vector-icons';
 import Svg, { Circle } from 'react-native-svg';
 import { firebaseConfig } from '@/data/firebase/config';
@@ -89,7 +89,7 @@ const OTPVerify = () => {
     return (
     <SafeAreaWrapper>
       <AuthBackgroundHUD />
-      <FirebaseRecaptchaVerifierModal ref={recaptchaVerifier} firebaseConfig={firebaseConfig} attemptInvisibleVerification={true}/>
+      <FirebaseRecaptcha ref={recaptchaVerifier} firebaseConfig={firebaseConfig} />
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
         <Animated.View style={[{ flex: 1, justifyContent: 'center' }, { opacity: fadeAnim }]}>
           <Animated.View style={[styles.card, { marginTop: 120, opacity: cardOpacityAnim, transform: [{ translateY: cardSlideAnim }] }]}>

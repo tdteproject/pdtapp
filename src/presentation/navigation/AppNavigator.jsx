@@ -13,6 +13,9 @@ import ProfileSetupScreen from '@/presentation/screens/ProfileScreen/ProfileSetu
 import DashboardHomeScreen from '@/presentation/screens/DashboardScreen/DashboardHomeScreen';
 import WorkoutsScreen from '@/presentation/screens/WorkoutsScreen/WorkoutsScreen';
 import MeScreen from '@/presentation/screens/MeScreen/MeScreen';
+import StepsScreen from '@/presentation/screens/MetricsScreens/StepsScreen';
+import CaloriesScreen from '@/presentation/screens/MetricsScreens/CaloriesScreen';
+import WaterScreen from '@/presentation/screens/MetricsScreens/WaterScreen';
 import { colors } from '@/presentation/themes/colors';
 import { fontFamily, fontSize } from '@/presentation/themes/typography';
 
@@ -76,7 +79,7 @@ function MainTabs() {
                     marginTop: -4,
                 },
                 tabBarStyle: {
-                    backgroundColor: colors.card,
+                    backgroundColor: '#FFFFFF',
                     borderTopWidth: 0,
                     position: 'absolute',
                     bottom: 16,
@@ -141,6 +144,10 @@ export default function AppNavigator() {
                                     initialParams={{ isEditMode: true }}
                                     options={{ animation: 'slide_from_right' }}
                                 />
+                                {/* Detailed Metric Stack Screens */}
+                                <Stack.Screen name="StepsDetail" component={StepsScreen} options={{ animation: 'slide_from_right' }} />
+                                <Stack.Screen name="CaloriesDetail" component={CaloriesScreen} options={{ animation: 'slide_from_right' }} />
+                                <Stack.Screen name="WaterDetail" component={WaterScreen} options={{ animation: 'slide_from_right' }} />
                             </>
                         )}
                     </Stack.Group>
