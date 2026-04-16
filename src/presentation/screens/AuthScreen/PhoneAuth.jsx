@@ -84,8 +84,13 @@ const PhoneAuth = () => {
             return;
         }
         clearError();
-        await sendOTP(phone, recaptchaVerifier.current);
-        navigation.navigate('OTPVerify', { phone });
+        // Pass the ref as both verifier (test numbers) and webViewRef (real numbers)
+        await sendOTP(phone, recaptchaVerifier.current, recaptchaVerifier.current);
+        // Only navigate if OTP was actually sent (store sets otpSent)
+        const { otpSent } = useAuthStore.getState();
+        if (otpSent) {
+            navigation.navigate('OTPVerify', { phone });
+        }
     };
 
     return (

@@ -39,7 +39,7 @@ const FirebaseRecaptcha = forwardRef(({ firebaseConfig }, ref) => {
       // INSTANT BYPASS for Development / Testing numbers
       if (auth.settings.appVerificationDisabledForTesting) {
         console.log('[FirebaseRecaptcha.web] Bypassing reCAPTCHA for testing (Dev Mode)...');
-        return Promise.resolve('manual-bypass-token-web');
+        return Promise.resolve('');
       }
 
       if (!recaptchaVerifier.current) {

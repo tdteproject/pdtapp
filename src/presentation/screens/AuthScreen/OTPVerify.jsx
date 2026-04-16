@@ -73,7 +73,7 @@ const OTPVerify = () => {
         if (timer > 0) return;
         setOtp('');
         clearError();
-        await sendOTP(phone, recaptchaVerifier.current);
+        await sendOTP(phone, recaptchaVerifier.current, recaptchaVerifier.current);
         setTimer(TIMER_DURATION);
     };
 
