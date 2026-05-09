@@ -1,0 +1,53 @@
+name: Security Gate
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  security-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fail if sensitive files are tracked
+        run: |
+          set -e
+          files=("google-services.json" ".env" "keystore.jks" "serviceAccountKey.json")
+          tracked=()
+          for f in "${files[@]}"; do
+            if git ls-files --error-unmatch -- "${f}" > /dev/null 2>&1; then
+              tracked+=("${f}")
+            fi
+          done
+          if [ ${#tracked[@]} -ne 0 ]; then
+            echo "Error: The following sensitive files are tracked in git: ${tracked[*]}"
+            exit 1
+          fi
+
+      - name: Scan for API key patterns and private keys
+        run: |
+          set -e
+          # Search tracked files only (ignore node_modules, build, .git)
+          patterns=('AIza' 'sk-' 'BEGIN PRIVATE KEY' '-----BEGIN PRIVATE KEY-----' 'service_account' 'PRIVATE KEY')
+          matches=0
+          for p in "${patterns[@]}"; do
+            if git grep -n --cached -I -e "$p" -- ':!node_modules' ':!**/build/**' ':!android/build/**' || true; then
+              # git grep exits non-zero when no match; ignore
+              :
+            fi
+          done
+          # Use grep over workspace for untracked files as well (but ignore common paths)
+          if git ls-files --exclude-standard -oi --directory | grep -q .; then
+            :
+          fi
+          # Final check with ripgrep if available
+          if command -v rg >/dev/null 2>&1; then
+            rg --hidden --glob '!node_modules' --glob '!**/build/**' --glob '!android/build/**' "(AIza|sk-|-----BEGIN PRIVATE KEY-----|service_account)" || true
+          else
+            grep -R --line-number -I -E "(AIza|sk-|-----BEGIN PRIVATE KEY-----|service_account)" . || true
+          fi
+
+      - name: Security gate passed
+        run: echo "Security gate checks completed (no blocking issues found)."

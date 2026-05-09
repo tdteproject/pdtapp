@@ -7,6 +7,7 @@ web-build/
 
 # Dependencies
 node_modules/
+.agents/
 
 # Logs
 *.log
@@ -51,3 +52,19 @@ GoogleService-Info.plist
 ios/build/
 android/app/build/
 
+# Backend Secrets
+server/node_modules/
+serviceAccountKey.json
+
+# EAS
+.eas/
+eas-build-pre-upload-artifacts-*.tar.gz
+
+# Binaries
+cloudflared.exe
+
+# ateschh-kit runtime files
+.state/
+projects/
+archive/
+mission/
