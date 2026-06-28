@@ -68,3 +68,22 @@ cloudflared.exe
 projects/
 archive/
 mission/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Debug dumps
+logcat_dump.txt
+*.dump
+
+# Graphify output (regeneratable)
+graphify-out/
+
+# Duplicate kit copies
+init/
+resume/
+
+# Scratch files
+scratch/
